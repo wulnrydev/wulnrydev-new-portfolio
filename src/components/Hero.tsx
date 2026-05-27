@@ -1,0 +1,220 @@
+"use client";
+import { useEffect, useState } from "react";
+import styles from "./Hero.module.css";
+import { useLanyard } from "@/hooks/useLanyard";
+
+const TYPEWRITER_TEXT =
+  "I design & develop modern interfaces, advanced applications, Minecraft solutions and Discord bots,";
+
+function useTypewriter(text: string, speed = 32, delay = 700) {
+  const [idx, setIdx] = useState(0);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setActive(true), delay);
+    return () => clearTimeout(t);
+  }, [delay]);
+
+  useEffect(() => {
+    if (!active || idx >= text.length) return;
+    const t = setTimeout(() => setIdx((i) => i + 1), speed);
+    return () => clearTimeout(t);
+  }, [active, idx, text, speed]);
+
+  return { output: text.slice(0, idx), done: idx >= text.length };
+}
+
+function StatCounter({ end, prefix = "", suffix = "", delay = 0 }: {
+  end: number; prefix?: string; suffix?: string; delay?: number;
+}) {
+  const [val, setVal] = useState(0);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    let raf: number;
+    const startTime = performance.now() + delay;
+    const duration = 1400;
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      if (elapsed < 0) { raf = requestAnimationFrame(tick); return; }
+      const p = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      if (p < 1) {
+        setVal(Math.round(eased * end + Math.random() * (end * 0.3) * (1 - eased)));
+        raf = requestAnimationFrame(tick);
+      } else {
+        setVal(end);
+        setDone(true);
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [end, delay]);
+
+  return (
+    <span className={`${styles.statNum} ${done ? styles.statDone : styles.statCycle}`}>
+      {prefix}{val}{suffix}
+    </span>
+  );
+}
+
+import ThreeScene from "./ThreeScene";
+
+export default function Hero() {
+  const { output, done } = useTypewriter(TYPEWRITER_TEXT);
+  const lanyard = useLanyard();
+
+  const discordUser = lanyard?.discord_user;
+  const status = lanyard?.discord_status || "offline";
+  const statusColors = {
+    online: "#23a559",
+    idle: "#f0b232",
+    dnd: "#f23f43",
+    offline: "#80848e",
+  };
+  const statusText = {
+    online: "Online",
+    idle: "Idle",
+    dnd: "Do Not Disturb",
+    offline: "Offline",
+  };
+  
+  const activity = lanyard?.activities?.find(a => a.type === 0 || a.type === 2); // Playing or Listening
+  const spotify = lanyard?.spotify;
+
+  return (
+    <section id="hero" className={styles.section}>
+      <ThreeScene />
+      <div className={styles.inner}>
+
+        {/* ── LEFT COLUMN ── */}
+        <div className={styles.left}>
+          {/* Online badge */}
+          <div className={styles.badge} id="hero-badge">
+            <span className={styles.dot} />
+            Online &amp; available
+          </div>
+
+          {/* Title */}
+          <div className={styles.titleBlock}>
+            <p className={styles.greeting}>Hello, I&apos;m</p>
+            <h1 className={styles.name}>wulnrydev</h1>
+          </div>
+
+          {/* Typewriter description */}
+          <p className={styles.desc} aria-label={TYPEWRITER_TEXT}>
+            {output}
+            <span className={`${styles.cursor} ${done ? styles.cursorBlink : ""}`} aria-hidden="true">|</span>
+          </p>
+
+          {/* Buttons */}
+          <div className={styles.btns}>
+            <a id="hero-contact-btn" href="mailto:em1rhqnzw@gmail.com" className={styles.btnPrimary}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Get in touch
+            </a>
+            <a id="hero-github-btn" href="https://github.com/wulnrydev" target="_blank" rel="noopener noreferrer" className={styles.btnSecondary}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              View GitHub
+            </a>
+          </div>
+
+          {/* Stats row */}
+          <div className={styles.stats}>
+            <div className={styles.stat} id="stat-experience">
+              <StatCounter end={6} prefix="+" delay={300} />
+              <span className={styles.statLabel}>Years Experience</span>
+            </div>
+            <div className={styles.statDivider} />
+            <div className={styles.stat} id="stat-technologies">
+              <StatCounter end={15} prefix="+" delay={600} />
+              <span className={styles.statLabel}>Technologies</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── RIGHT COLUMN — Profile Card ── */}
+        <div className={styles.right}>
+          <div className={styles.card} id="hero-profile-card">
+            {/* Card header */}
+            <div className={styles.cardHeader}>
+              <div className={styles.avatarWrapper}>
+                {discordUser ? (
+                  <img
+                    src={`https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png?size=128`}
+                    alt="Discord Avatar"
+                    className={styles.avatarImg}
+                  />
+                ) : (
+                  <div className={styles.avatar} aria-label="wulnrydev avatar">
+                    <span>W</span>
+                  </div>
+                )}
+                <div 
+                  className={styles.statusIndicator} 
+                  style={{ backgroundColor: statusColors[status] }} 
+                />
+              </div>
+              <div className={styles.cardHeaderInfo}>
+                <span className={styles.cardName}>{discordUser?.global_name || "wulnrydev"}</span>
+                <span className={styles.cardHandle}>@{discordUser?.username || "wulnrydev"}</span>
+              </div>
+            </div>
+
+            <div className={styles.cardDivider} />
+
+            {/* Status */}
+            <div className={styles.cardRow}>
+              <span className={styles.cardLabel}>STATUS</span>
+              <span className={styles.cardOnline} style={{ color: statusColors[status] }}>
+                <span 
+                  className={styles.onlineDot} 
+                  style={{ 
+                    backgroundColor: statusColors[status],
+                    boxShadow: `0 0 8px ${statusColors[status]}` 
+                  }} 
+                />
+                {statusText[status]}
+              </span>
+            </div>
+            
+            {/* Activity */}
+            {(activity || spotify) && (
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>{spotify ? "LISTENING" : "PLAYING"}</span>
+                <span className={styles.cardValue} style={{ maxWidth: '140px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {spotify ? `${spotify.song} - ${spotify.artist}` : activity?.name}
+                </span>
+              </div>
+            )}
+
+            {/* Discord ID */}
+            <div className={styles.cardRow}>
+              <span className={styles.cardLabel}>DISCORD ID</span>
+              <span className={styles.cardValue}>{discordUser?.id || "902241075316535366"}</span>
+            </div>
+
+            <div className={styles.cardDivider} />
+
+            {/* CTA */}
+            <a
+              id="card-github-btn"
+              href="https://github.com/wulnrydev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.cardBtn}
+            >
+              View Profile
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
