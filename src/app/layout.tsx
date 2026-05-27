@@ -75,6 +75,7 @@ export const metadata: Metadata = {
   },
 };
 import Loader from "@/components/Loader";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 export default function RootLayout({
   children,
@@ -84,8 +85,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
-        <Loader />
-        {children}
+        <LanguageProvider>
+          <Loader />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

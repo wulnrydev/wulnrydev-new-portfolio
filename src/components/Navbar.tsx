@@ -1,10 +1,40 @@
 "use client";
 import { useEffect, useState } from "react";
 import styles from "./Navbar.module.css";
+import { useLang } from "@/context/LanguageContext";
+
+function LangSwitcher() {
+  const { lang, setLang } = useLang();
+
+  return (
+    <div className={styles.langSwitcher} id="nav-lang-switcher" aria-label="Language switcher">
+      {/* sliding track */}
+      <div className={`${styles.langSwitcherTrack} ${lang === "tr" ? styles.right : ""}`} />
+      <button
+        className={`${styles.langBtn} ${lang === "en" ? styles.active : ""}`}
+        onClick={() => setLang("en")}
+        aria-pressed={lang === "en"}
+        aria-label="Switch to English"
+      >
+        EN
+      </button>
+      <button
+        className={`${styles.langBtn} ${lang === "tr" ? styles.active : ""}`}
+        onClick={() => setLang("tr")}
+        aria-pressed={lang === "tr"}
+        aria-label="Türkçeye geç"
+      >
+        TR
+      </button>
+    </div>
+  );
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { t, lang, setLang } = useLang();
+  const n = t.nav;
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
@@ -30,14 +60,15 @@ export default function Navbar() {
 
         {/* Center links — desktop */}
         <div className={styles.links}>
-          <a href="https://github.com/wulnrydev" target="_blank" rel="noopener noreferrer" className={styles.link} id="nav-github-link">GitHub</a>
-          <a href="#skills" className={styles.link} id="nav-skills-link">Skills</a>
-          <a href="#portfolio" className={styles.link} id="nav-portfolio-link">Portfolio</a>
-          <a href="#faq" className={styles.link} id="nav-faq-link">FAQ</a>
+          <a href="https://github.com/wulnrydev" target="_blank" rel="noopener noreferrer" className={styles.link} id="nav-github-link">{n.github}</a>
+          <a href="#skills" className={styles.link} id="nav-skills-link">{n.skills}</a>
+          <a href="#portfolio" className={styles.link} id="nav-portfolio-link">{n.portfolio}</a>
+          <a href="#faq" className={styles.link} id="nav-faq-link">{n.faq}</a>
         </div>
 
-        {/* Right icons — desktop */}
+        {/* Right icons + lang switcher — desktop */}
         <div className={styles.right}>
+          <LangSwitcher />
           <a href="https://github.com/wulnrydev" target="_blank" rel="noopener noreferrer" className={styles.iconBtn} id="nav-github-icon" aria-label="GitHub">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -55,7 +86,7 @@ export default function Navbar() {
           id="nav-hamburger"
           className={`${styles.hamburger} ${menuOpen ? styles.open : ""}`}
           onClick={() => setMenuOpen((o) => !o)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-label={menuOpen ? n.closeMenu : n.openMenu}
           aria-expanded={menuOpen}
         >
           <span className={styles.bar} />
@@ -71,11 +102,36 @@ export default function Navbar() {
 
         {/* Panel */}
         <nav className={styles.drawerPanel} aria-label="Mobile navigation">
-          <a href="#hero" className={styles.drawerLink} onClick={close}>Home</a>
-          <a href="#skills" className={styles.drawerLink} onClick={close}>Skills</a>
-          <a href="#portfolio" className={styles.drawerLink} onClick={close}>Portfolio</a>
-          <a href="#current-work" className={styles.drawerLink} onClick={close}>Current Work</a>
-          <a href="#faq" className={styles.drawerLink} onClick={close}>FAQ</a>
+          <a href="#hero" className={styles.drawerLink} onClick={close}>{n.home}</a>
+          <a href="#skills" className={styles.drawerLink} onClick={close}>{n.skills}</a>
+          <a href="#portfolio" className={styles.drawerLink} onClick={close}>{n.portfolio}</a>
+          <a href="#current-work" className={styles.drawerLink} onClick={close}>{n.currentWork}</a>
+          <a href="#faq" className={styles.drawerLink} onClick={close}>{n.faq}</a>
+
+          <div className={styles.drawerDivider} />
+
+          {/* Language switcher in drawer */}
+          <div className={styles.drawerLangRow}>
+            <span className={styles.drawerLangLabel}>Language</span>
+            <div className={styles.drawerLangSwitcher}>
+              <button
+                className={`${styles.langBtn} ${lang === "en" ? styles.active : ""}`}
+                onClick={() => setLang("en")}
+                aria-pressed={lang === "en"}
+                aria-label="Switch to English"
+              >
+                EN
+              </button>
+              <button
+                className={`${styles.langBtn} ${lang === "tr" ? styles.active : ""}`}
+                onClick={() => setLang("tr")}
+                aria-pressed={lang === "tr"}
+                aria-label="Türkçeye geç"
+              >
+                TR
+              </button>
+            </div>
+          </div>
 
           <div className={styles.drawerDivider} />
 

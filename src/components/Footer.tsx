@@ -1,6 +1,11 @@
+"use client";
 import styles from "./Footer.module.css";
+import { useLang } from "@/context/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLang();
+  const f = t.footer;
+
   return (
     <footer className={styles.footer}>
       {/* Bottom glow effect */}
@@ -14,10 +19,10 @@ export default function Footer() {
         <div className={styles.topRow}>
           <span className={styles.logo}>wulnrydev</span>
           <div className={styles.links}>
-            <a href="#hero" className={styles.link}>Home</a>
-            <a href="#skills" className={styles.link}>Skills</a>
-            <a href="#portfolio" className={styles.link}>Portfolio</a>
-            <a href="#faq" className={styles.link}>FAQ</a>
+            <a href="#hero" className={styles.link}>{f.home}</a>
+            <a href="#skills" className={styles.link}>{f.skills}</a>
+            <a href="#portfolio" className={styles.link}>{f.portfolio}</a>
+            <a href="#faq" className={styles.link}>{f.faq}</a>
           </div>
           <div className={styles.socials}>
             <a
@@ -48,10 +53,10 @@ export default function Footer() {
 
         <div className={styles.bottomRow}>
           <span className={styles.copy}>
-            &copy; {new Date().getFullYear()} wulnrydev. All rights reserved.
+            &copy; {new Date().getFullYear()} wulnrydev. {f.rights}
           </span>
           <span className={styles.madeWith}>
-            Built with Next.js &amp; TypeScript
+            {f.builtWith}
           </span>
         </div>
       </div>

@@ -3,9 +3,12 @@ import { useState } from "react";
 import Image from "next/image";
 import styles from "./CurrentWork.module.css";
 import ThreeSceneSecondary from "./ThreeSceneSecondary";
+import { useLang } from "@/context/LanguageContext";
 
 export default function CurrentWork() {
   const [copied, setCopied] = useState(false);
+  const { t, lang } = useLang();
+  const cw = t.currentWork;
 
   const handleCopy = () => {
     navigator.clipboard.writeText("play.marimoss.net");
@@ -16,7 +19,7 @@ export default function CurrentWork() {
   return (
     <section id="current-work" className={styles.section}>
       <div className={styles.inner}>
-        
+
         {/* ── LEFT: 3D Animation ── */}
         <div className={styles.leftCol}>
           <ThreeSceneSecondary />
@@ -25,14 +28,14 @@ export default function CurrentWork() {
         {/* ── RIGHT: Content ── */}
         <div className={styles.rightCol}>
           <div className={styles.header}>
-            <h2 className={styles.title}>Current Work</h2>
-            <p className={styles.sub}>What I&apos;m building right now</p>
+            <h2 className={styles.title}>{cw.title}</h2>
+            <p className={styles.sub}>{cw.sub}</p>
           </div>
 
           <div className={styles.cardWrapper}>
             {/* Animated gradient border */}
             <div className={styles.gradientBorder} />
-            
+
             <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <div className={styles.logoBox}>
@@ -46,39 +49,40 @@ export default function CurrentWork() {
                 </div>
                 <div className={styles.titleBox}>
                   <h3 className={styles.projectTitle}>Marimoss</h3>
-                  <span className={styles.projectType}>Lead Developer & Co-Owner</span>
+                  <span className={styles.projectType}>{cw.role}</span>
                 </div>
               </div>
 
               <p className={styles.desc}>
-                A modern, actively developed premium Minecraft network featuring highly customized 
-                game modes including <strong>SkyBlock</strong>, <strong>Survival</strong>, <strong>BoxPvP</strong>, and <strong>Towny</strong>.
+                {cw.desc}{" "}
+                <strong>SkyBlock</strong>, <strong>Survival</strong>, <strong>BoxPvP</strong>{" "}
+                {lang === "tr" ? "ve" : "and"} <strong>Towny</strong>.
               </p>
 
               <div className={styles.actions}>
-                <a 
-                  href="https://www.marimoss.net" 
-                  target="_blank" 
+                <a
+                  href="https://www.marimoss.net"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className={styles.btnPrimary}
                 >
-                  Visit Website
+                  {cw.visitWebsite}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
                   </svg>
                 </a>
-                
-                <button 
+
+                <button
                   onClick={handleCopy}
                   className={styles.btnCopy}
-                  aria-label="Copy IP address"
+                  aria-label={cw.copyIp}
                 >
                   {copied ? (
                     <>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
-                      Copied!
+                      {cw.copied}
                     </>
                   ) : (
                     <>
@@ -94,7 +98,7 @@ export default function CurrentWork() {
             </div>
           </div>
         </div>
-        
+
       </div>
     </section>
   );

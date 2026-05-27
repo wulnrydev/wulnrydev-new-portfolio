@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Reveal from "./Reveal";
 import styles from "./Skills.module.css";
+import { useLang } from "@/context/LanguageContext";
 
 interface Skill {
   name: string;
@@ -109,6 +110,9 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
 }
 
 export default function Skills() {
+  const { t } = useLang();
+  const s = t.skills;
+
   return (
     <section id="skills" className={styles.section}>
 
@@ -116,17 +120,17 @@ export default function Skills() {
       <Reveal width="100%">
         <div className={styles.dividerRow}>
           <span className={styles.dividerLine} />
-          <span className={styles.dividerText}>Skills</span>
+          <span className={styles.dividerText}>{s.sectionLabel}</span>
           <span className={styles.dividerLine} />
         </div>
       </Reveal>
 
       <div className={styles.header}>
         <Reveal delay={150} width="100%">
-          <h2 className={styles.title}>Skills</h2>
+          <h2 className={styles.title}>{s.title}</h2>
         </Reveal>
         <Reveal delay={300} width="100%">
-          <p className={styles.sub}>Technologies I work with</p>
+          <p className={styles.sub}>{s.sub}</p>
         </Reveal>
       </div>
 
