@@ -60,9 +60,9 @@ export default function Navbar() {
 
         {/* Center links — desktop */}
         <div className={styles.links}>
-          <a href="https://github.com/wulnrydev" target="_blank" rel="noopener noreferrer" className={styles.link} id="nav-github-link">{n.github}</a>
           <a href="#skills" className={styles.link} id="nav-skills-link">{n.skills}</a>
           <a href="#portfolio" className={styles.link} id="nav-portfolio-link">{n.portfolio}</a>
+          <a href="#github" className={styles.link} id="nav-github-link">{n.github}</a>
           <a href="#faq" className={styles.link} id="nav-faq-link">{n.faq}</a>
         </div>
 
@@ -105,6 +105,7 @@ export default function Navbar() {
           <a href="#hero" className={styles.drawerLink} onClick={close}>{n.home}</a>
           <a href="#skills" className={styles.drawerLink} onClick={close}>{n.skills}</a>
           <a href="#portfolio" className={styles.drawerLink} onClick={close}>{n.portfolio}</a>
+          <a href="#github" className={styles.drawerLink} onClick={close}>{n.github}</a>
           <a href="#current-work" className={styles.drawerLink} onClick={close}>{n.currentWork}</a>
           <a href="#faq" className={styles.drawerLink} onClick={close}>{n.faq}</a>
 

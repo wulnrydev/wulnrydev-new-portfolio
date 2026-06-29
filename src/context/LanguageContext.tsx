@@ -70,6 +70,26 @@ export const translations = {
       badgeLive: "Live",
       close: "Close",
     },
+    // GitHub
+    github: {
+      sectionLabel: "Open Source",
+      title: "GitHub Activity",
+      sub: "Live statistics and every open-source project, straight from GitHub",
+      stats: {
+        repos: "Repositories",
+        stars: "Total Stars",
+        forks: "Total Forks",
+        followers: "Followers",
+      },
+      languagesLabel: "Most Used Languages",
+      reposLabel: "Open Source Projects",
+      archived: "Archived",
+      viewProfile: "View Full Profile on GitHub",
+      noDescription: "No description provided.",
+      loading: "Fetching data from GitHub…",
+      error: "Couldn't load GitHub data right now. Please try again later.",
+      updated: "Updated",
+    },
     // Current Work
     currentWork: {
       title: "Current Work",
@@ -179,6 +199,26 @@ export const translations = {
       badgeOpen: "Açık Kaynak",
       badgeLive: "Canlı",
       close: "Kapat",
+    },
+    // GitHub
+    github: {
+      sectionLabel: "Açık Kaynak",
+      title: "GitHub Aktivitesi",
+      sub: "Doğrudan GitHub'dan canlı istatistikler ve tüm açık kaynak projeler",
+      stats: {
+        repos: "Depolar",
+        stars: "Toplam Yıldız",
+        forks: "Toplam Fork",
+        followers: "Takipçi",
+      },
+      languagesLabel: "En Çok Kullanılan Diller",
+      reposLabel: "Açık Kaynak Projeler",
+      archived: "Arşivlenmiş",
+      viewProfile: "GitHub'da Tüm Profili Gör",
+      noDescription: "Açıklama eklenmemiş.",
+      loading: "GitHub'dan veriler alınıyor…",
+      error: "GitHub verileri şu anda yüklenemedi. Lütfen daha sonra tekrar deneyin.",
+      updated: "Güncelleme",
     },
     // Current Work
     currentWork: {

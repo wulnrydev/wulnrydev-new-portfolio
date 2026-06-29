@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import CurrentWork from "@/components/CurrentWork";
 import Skills from "@/components/Skills";
 import Portfolio from "@/components/Portfolio";
+import GitHub from "@/components/GitHub";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 import ThreeSceneFooter from "@/components/ThreeSceneFooter";
@@ -16,6 +17,7 @@ export default function Home() {
         <CurrentWork />
         <Skills />
         <Portfolio />
+        <GitHub />
         <FAQ />
         {/* Creative 3D element at the bottom */}
         <div style={{ position: "relative", width: "100%", height: "500px", marginTop: "-150px", pointerEvents: "none" }}>
