@@ -1,13 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-inter",
-  display: "swap",
-});
+import Loader from "@/components/Loader";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 export const viewport: Viewport = {
   themeColor: "#0d0d0d",
@@ -49,21 +43,21 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://wulnrydev.com",
+    siteName: "wulnrydev",
     title: "wulnrydev — Full-Stack Developer",
     description:
       "Modern interfaces, advanced applications, Minecraft solutions and Discord bots.",
-    url: "https://wulnrydev.com",
-    siteName: "wulnrydev",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "wulnrydev Portfolio",
+        alt: "wulnrydev",
       },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
@@ -74,8 +68,6 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
 };
-import Loader from "@/components/Loader";
-import { LanguageProvider } from "@/context/LanguageContext";
 
 export default function RootLayout({
   children,
@@ -83,8 +75,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
+    <html lang="en">
+      <body>
         <LanguageProvider>
           <Loader />
           {children}

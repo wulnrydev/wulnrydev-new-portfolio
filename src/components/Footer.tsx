@@ -20,8 +20,8 @@ export default function Footer() {
           <span className={styles.logo}>wulnrydev</span>
           <div className={styles.links}>
             <a href="#hero" className={styles.link}>{f.home}</a>
+            <a href="#past-projects" className={styles.link}>{f.pastProjects}</a>
             <a href="#skills" className={styles.link}>{f.skills}</a>
-            <a href="#portfolio" className={styles.link}>{f.portfolio}</a>
             <a href="#faq" className={styles.link}>{f.faq}</a>
           </div>
           <div className={styles.socials}>

@@ -9,10 +9,9 @@ export const translations = {
     nav: {
       github: "GitHub",
       skills: "Skills",
-      portfolio: "Portfolio",
       faq: "FAQ",
       home: "Home",
-      currentWork: "Current Work",
+      pastProjects: "Past Projects",
       openMenu: "Open menu",
       closeMenu: "Close menu",
     },
@@ -37,17 +36,28 @@ export const translations = {
         offline: "Offline",
       },
     },
+    // Past Projects
+    pastProjects: {
+      badge: "Archive",
+      title: "Past Projects",
+      sub: "Notable projects and servers I've worked on",
+      marimossRole: "Lead Developer & Co-Owner",
+      serverLabel: "Server",
+      roleLabel: "Role",
+      statusLabel: "Status",
+      statusValue: "Archived",
+    },
     // Skills
     skills: {
       sectionLabel: "Skills",
       title: "Skills",
       sub: "Technologies I work with",
     },
-    // Portfolio
+    // Portfolio (kept for type compatibility)
     portfolio: {
       sectionLabel: "Portfolio",
-      title: "Selected Work",
-      sub: "Check out my recent setups and plugins",
+      title: "Portfolio",
+      sub: "Explore my setups, plugins, bots and web projects",
       tabs: {
         server: "Server Setups",
         plugin: "Plugins",
@@ -90,16 +100,6 @@ export const translations = {
       error: "Couldn't load GitHub data right now. Please try again later.",
       updated: "Updated",
     },
-    // Current Work
-    currentWork: {
-      title: "Current Work",
-      sub: "What I'm building right now",
-      role: "Lead Developer & Co-Owner",
-      desc: "A modern, actively developed premium Minecraft network featuring highly customized game modes including",
-      visitWebsite: "Visit Website",
-      copyIp: "Copy IP address",
-      copied: "Copied!",
-    },
     // FAQ
     faq: {
       sectionLabel: "FAQ",
@@ -127,8 +127,8 @@ export const translations = {
     // Footer
     footer: {
       home: "Home",
+      pastProjects: "Past Projects",
       skills: "Skills",
-      portfolio: "Portfolio",
       faq: "FAQ",
       rights: "All rights reserved.",
       builtWith: "Built with Next.js & TypeScript",
@@ -139,10 +139,9 @@ export const translations = {
     nav: {
       github: "GitHub",
       skills: "Beceriler",
-      portfolio: "Portfolyo",
       faq: "SSS",
       home: "Ana Sayfa",
-      currentWork: "Güncel Çalışma",
+      pastProjects: "Geçmiş Projeler",
       openMenu: "Menüyü aç",
       closeMenu: "Menüyü kapat",
     },
@@ -167,17 +166,28 @@ export const translations = {
         offline: "Çevrimdışı",
       },
     },
+    // Past Projects
+    pastProjects: {
+      badge: "Arşiv",
+      title: "Geçmiş Bilindik Projelerim",
+      sub: "Daha önce liderliğini ve geliştirmesini yaptığım bilindik projeler",
+      marimossRole: "Baş Geliştirici & Ortak Kurucu",
+      serverLabel: "Sunucu",
+      roleLabel: "Ünvan",
+      statusLabel: "Durum",
+      statusValue: "Arşivlenmiş",
+    },
     // Skills
     skills: {
       sectionLabel: "Beceriler",
       title: "Beceriler",
       sub: "Çalıştığım teknolojiler",
     },
-    // Portfolio
+    // Portfolio (tip uyumluluğu için)
     portfolio: {
       sectionLabel: "Portfolyo",
-      title: "Seçili Çalışmalar",
-      sub: "Son setup'larım ve plugin'lerimi incele",
+      title: "Portfolyo",
+      sub: "Setup, plugin, bot ve web projelerimi keşfet",
       tabs: {
         server: "Sunucu Setup'ları",
         plugin: "Plugin'ler",
@@ -217,18 +227,8 @@ export const translations = {
       viewProfile: "GitHub'da Tüm Profili Gör",
       noDescription: "Açıklama eklenmemiş.",
       loading: "GitHub'dan veriler alınıyor…",
-      error: "GitHub verileri şu anda yüklenemedi. Lütfen daha sonra tekrar deneyin.",
+      error: "GitHub verileri şu online değil. Lütfen daha sonra tekrar deneyin.",
       updated: "Güncelleme",
-    },
-    // Current Work
-    currentWork: {
-      title: "Güncel Çalışma",
-      sub: "Şu an üzerinde çalıştıklarım",
-      role: "Baş Geliştirici & Ortak Kurucu",
-      desc: "Modern, aktif olarak geliştirilen, yüksek düzeyde özelleştirilmiş oyun modlarına sahip premium bir Minecraft ağı:",
-      visitWebsite: "Siteyi Ziyaret Et",
-      copyIp: "IP adresini kopyala",
-      copied: "Kopyalandı!",
     },
     // FAQ
     faq: {
@@ -257,8 +257,8 @@ export const translations = {
     // Footer
     footer: {
       home: "Ana Sayfa",
+      pastProjects: "Geçmiş Projeler",
       skills: "Beceriler",
-      portfolio: "Portfolyo",
       faq: "SSS",
       rights: "Tüm hakları saklıdır.",
       builtWith: "Next.js & TypeScript ile geliştirildi",
