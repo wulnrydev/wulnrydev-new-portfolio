@@ -27,8 +27,12 @@ export default function MusicPlayer() {
   const { t } = useLang();
   const p = t.player;
 
+  const sectionRef = useRef<HTMLElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const startedRef = useRef(false);
+  /* The 5 MB track is only requested once the player is close to the viewport,
+     so it never competes with the first paint. */
+  const [source, setSource] = useState<string | null>(null);
   /* Current fade multiplier (0 → 1) applied on top of the target volume. */
   const gainRef = useRef(0);
   const fadeStartRef = useRef({ at: 0, from: 0 });
@@ -40,6 +44,40 @@ export default function MusicPlayer() {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.7);
   const [muted, setMuted] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      setSource(TRACK.src);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+
+        const attach = () => setSource(TRACK.src);
+        const whenIdle = () => {
+          if (typeof window.requestIdleCallback === "function") {
+            window.requestIdleCallback(attach, { timeout: 2500 });
+          } else {
+            window.setTimeout(attach, 800);
+          }
+        };
+
+        /* Buffering the track must never compete with the first paint. */
+        if (document.readyState === "complete") whenIdle();
+        else window.addEventListener("load", whenIdle, { once: true });
+      },
+      { rootMargin: "400px 0px" }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   const activeIndex = useMemo(
     () => LYRICS.reduce((acc, line, index) => (current >= line.time ? index : acc), -1),
@@ -132,6 +170,9 @@ export default function MusicPlayer() {
     const audio = audioRef.current;
     if (!audio) return;
 
+    /* Safety net: a press before the lazy source was attached. */
+    if (!audio.getAttribute("src")) setSource(TRACK.src);
+
     if (!audio.paused) {
       audio.pause();
       return;
@@ -175,7 +216,7 @@ export default function MusicPlayer() {
   const volumePercent = muted ? 0 : Math.round(volume * 100);
 
   return (
-    <section id="now-playing" className={styles.section}>
+    <section id="now-playing" className={styles.section} ref={sectionRef}>
       <div className={styles.stage}>
         <h2 className={styles.title}>{TRACK.title}</h2>
 
@@ -259,8 +300,8 @@ export default function MusicPlayer() {
 
       <audio
         ref={audioRef}
-        src={encodeURI(TRACK.src)}
-        preload="metadata"
+        src={source ? encodeURI(source) : undefined}
+        preload={source ? "metadata" : "none"}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onEnded={() => {

@@ -1,5 +1,5 @@
 "use client";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Reveal.module.css";
 
 interface RevealProps {
@@ -9,33 +9,61 @@ interface RevealProps {
   direction?: "up" | "down" | "left" | "right";
 }
 
+/* One observer for the whole page: cheaper than one per section element. */
+let sharedObserver: IntersectionObserver | null = null;
+const onReveal = new WeakMap<Element, () => void>();
+
+function observe(el: Element, callback: () => void) {
+  if (typeof IntersectionObserver === "undefined") {
+    callback();
+    return () => {};
+  }
+
+  if (!sharedObserver) {
+    sharedObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          onReveal.get(entry.target)?.();
+          onReveal.delete(entry.target);
+          sharedObserver?.unobserve(entry.target);
+        }
+      },
+      { rootMargin: "0px 0px -60px 0px" }
+    );
+  }
+
+  onReveal.set(el, callback);
+  sharedObserver.observe(el);
+
+  return () => {
+    onReveal.delete(el);
+    sharedObserver?.unobserve(el);
+  };
+}
+
 export default function Reveal({
   children,
   width = "fit-content",
   delay = 0,
   direction = "up",
 }: RevealProps) {
-  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
 
-  const offset = reduceMotion
-    ? {}
-    : {
-        up: { y: 24 },
-        down: { y: -24 },
-        left: { x: -24 },
-        right: { x: 24 },
-      }[direction];
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    return observe(el, () => setShown(true));
+  }, []);
 
   return (
-    <motion.div
-      className={styles.root}
-      style={{ width }}
-      initial={{ opacity: 0, ...offset }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -60px 0px" }}
-      transition={{ duration: 0.7, delay: delay / 1000, ease: [0.16, 1, 0.3, 1] }}
+    <div
+      ref={ref}
+      className={`${styles.root} ${styles[direction]} ${shown ? styles.shown : ""}`}
+      style={{ width, transitionDelay: `${delay}ms` }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

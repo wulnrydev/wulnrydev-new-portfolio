@@ -1,38 +1,65 @@
 "use client";
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Hero.module.css";
 import { useLanyard } from "@/hooks/useLanyard";
 import { useLang } from "@/context/LanguageContext";
 
 function useTypewriter(text: string, speed = 32, delay = 700) {
-  const [idx, setIdx] = useState(0);
-  const [active, setActive] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  const [typed, setTyped] = useState(false);
 
   useEffect(() => {
-    setIdx(0);
-    setActive(false);
-    const t = setTimeout(() => setActive(true), delay);
-    return () => clearTimeout(t);
-  }, [text, delay]);
+    const el = ref.current;
+    if (!el) return;
 
-  useEffect(() => {
-    if (!active || idx >= text.length) return;
-    const t = setTimeout(() => setIdx((i) => i + 1), speed);
-    return () => clearTimeout(t);
-  }, [active, idx, text, speed]);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.textContent = text;
+      setTyped(true);
+      return;
+    }
 
-  return { output: text.slice(0, idx), done: idx >= text.length };
+    /* Writes straight to the DOM so the hero never re-renders per character. */
+    el.textContent = "";
+    setTyped(false);
+
+    const timers: number[] = [];
+    let index = 0;
+
+    /* Two characters per tick at double the interval: same reading pace with
+       half the text-layout work. */
+    const step = () => {
+      index = Math.min(index + 2, text.length);
+      el.textContent = text.slice(0, index);
+      if (index < text.length) timers.push(window.setTimeout(step, speed * 2));
+      else setTyped(true);
+    };
+
+    timers.push(window.setTimeout(step, delay));
+    return () => timers.forEach((timer) => clearTimeout(timer));
+  }, [text, speed, delay]);
+
+  return { ref, typed };
 }
 
 function StatCounter({ end, prefix = "", suffix = "", delay = 0 }: {
   end: number; prefix?: string; suffix?: string; delay?: number;
 }) {
-  const [val, setVal] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    let raf: number;
+    const el = ref.current;
+    if (!el) return;
+
+    const final = `${prefix}${end}${suffix}`;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.textContent = final;
+      setDone(true);
+      return;
+    }
+
+    let raf = 0;
     const startTime = performance.now() + delay;
     const duration = 1400;
 
@@ -40,22 +67,22 @@ function StatCounter({ end, prefix = "", suffix = "", delay = 0 }: {
       const elapsed = now - startTime;
       if (elapsed < 0) { raf = requestAnimationFrame(tick); return; }
       const p = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
       if (p < 1) {
-        setVal(Math.round(eased * end + Math.random() * (end * 0.3) * (1 - eased)));
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = `${prefix}${Math.round(eased * end)}${suffix}`;
         raf = requestAnimationFrame(tick);
       } else {
-        setVal(end);
+        el.textContent = final;
         setDone(true);
       }
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [end, delay]);
+  }, [end, prefix, suffix, delay]);
 
   return (
-    <span className={`${styles.statNum} ${done ? styles.statDone : styles.statCycle}`}>
-      {prefix}{val}{suffix}
+    <span ref={ref} className={`${styles.statNum} ${done ? styles.statDone : styles.statCycle}`}>
+      {prefix}0{suffix}
     </span>
   );
 }
@@ -63,9 +90,7 @@ function StatCounter({ end, prefix = "", suffix = "", delay = 0 }: {
 export default function Hero() {
   const { t } = useLang();
   const h = t.hero;
-  const reduceMotion = useReducedMotion();
-
-  const { output, done } = useTypewriter(h.typewriter);
+  const { ref: typeRef, typed } = useTypewriter(h.typewriter);
   const lanyard = useLanyard();
 
   const discordUser = lanyard?.discord_user;
@@ -80,20 +105,6 @@ export default function Hero() {
   const activity = lanyard?.activities?.find(a => a.type === 0 || a.type === 2);
   const spotify = lanyard?.spotify;
 
-  const container: Variants = {
-    hidden: {},
-    show: { transition: { staggerChildren: reduceMotion ? 0 : 0.07, delayChildren: 0.05 } },
-  };
-
-  const item: Variants = {
-    hidden: { opacity: 0, y: reduceMotion ? 0 : 18 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
-    },
-  };
-
   return (
     <section id="hero" className={styles.section}>
       <div className={styles.ambient} aria-hidden="true">
@@ -102,32 +113,32 @@ export default function Hero() {
       </div>
 
       <div className={styles.inner}>
-        <motion.div
-          className={styles.left}
-          variants={container}
-          initial="hidden"
-          animate="show"
-        >
+        <div className={styles.left}>
           {/* Online badge */}
-          <motion.div className={styles.badge} id="hero-badge" variants={item}>
+          <div className={`${styles.badge} ${styles.fadeUp}`} id="hero-badge">
             <span className={styles.dot} />
             {h.badge}
-          </motion.div>
+          </div>
 
-          {/* Title */}
-          <motion.div className={styles.titleBlock} variants={item}>
+          {/* Title — transform only, so the LCP text paints immediately */}
+          <div className={`${styles.titleBlock} ${styles.riseUp}`}>
             <p className={styles.greeting}>{h.greeting}</p>
             <h1 className={styles.name}>wulnrydev</h1>
-          </motion.div>
+          </div>
 
           {/* Typewriter description */}
-          <motion.p className={styles.desc} aria-label={h.typewriter} variants={item}>
-            {output}
-            <span className={`${styles.cursor} ${done ? styles.cursorBlink : ""}`} aria-hidden="true">|</span>
-          </motion.p>
+          <p
+            className={`${styles.desc} ${styles.fadeUp}`}
+            style={{ animationDelay: "0.15s" }}
+            aria-label={h.typewriter}
+          >
+            <span className={styles.srOnly}>{h.typewriter}</span>
+            <span ref={typeRef} aria-hidden="true" />
+            <span className={`${styles.cursor} ${typed ? styles.cursorBlink : ""}`} aria-hidden="true">|</span>
+          </p>
 
           {/* Buttons */}
-          <motion.div className={styles.btns} variants={item}>
+          <div className={`${styles.btns} ${styles.fadeUp}`} style={{ animationDelay: "0.22s" }}>
             <a id="hero-contact-btn" href="mailto:em1rhqnzw@gmail.com" className={styles.btnPrimary}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -140,10 +151,10 @@ export default function Hero() {
               </svg>
               {h.viewGithub}
             </a>
-          </motion.div>
+          </div>
 
           {/* Stats row */}
-          <motion.div className={styles.stats} variants={item}>
+          <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "0.3s" }}>
             <div className={styles.stat} id="stat-experience">
               <StatCounter end={6} prefix="+" delay={300} />
               <span className={styles.statLabel}>{h.yearsExp}</span>
@@ -153,16 +164,11 @@ export default function Hero() {
               <StatCounter end={15} prefix="+" delay={600} />
               <span className={styles.statLabel}>{h.technologies}</span>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* ── RIGHT COLUMN — Profile Card ── */}
-        <motion.div
-          className={styles.right}
-          initial={{ opacity: 0, y: reduceMotion ? 0 : 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.85, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        >
+        <div className={`${styles.right} ${styles.riseUp}`} style={{ animationDelay: "0.1s" }}>
           <div className={styles.card} id="hero-profile-card">
             {/* Card header */}
             <div className={styles.cardHeader}>
@@ -172,6 +178,9 @@ export default function Hero() {
                   <img
                     src={`https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png?size=128`}
                     alt="Discord Avatar"
+                    width={56}
+                    height={56}
+                    decoding="async"
                     className={styles.avatarImg}
                   />
                 ) : (
@@ -236,7 +245,7 @@ export default function Hero() {
               {h.viewProfile}
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

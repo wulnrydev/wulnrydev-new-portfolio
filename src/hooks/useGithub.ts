@@ -50,7 +50,7 @@ export interface GithubData {
 
 const API = "https://api.github.com";
 
-export function useGithub(): GithubData {
+export function useGithub(enabled = true): GithubData {
   const [user, setUser] = useState<GithubUser | null>(null);
   const [repos, setRepos] = useState<GithubRepo[]>([]);
   const [stats, setStats] = useState<GithubStats | null>(null);
@@ -58,6 +58,11 @@ export function useGithub(): GithubData {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    /* The section is far below the fold — nothing is requested until it
+       actually comes into view, keeping the first load free of third-party
+       work and of the large repo list commit. */
+    if (!enabled) return;
+
     let cancelled = false;
 
     const load = async () => {
@@ -117,7 +122,7 @@ export function useGithub(): GithubData {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [enabled]);
 
   return { user, repos, stats, loading, error };
 }

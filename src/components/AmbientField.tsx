@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { useReducedMotion } from "framer-motion";
 import styles from "./AmbientField.module.css";
 
 interface Particle {
@@ -42,6 +41,17 @@ function buildRing(count: number, radius: number): Particle[] {
   return points;
 }
 
+/* Alpha is quantised into this many buckets so a frame needs only a handful
+   of fills instead of one fillStyle change per particle. */
+const BUCKETS = 12;
+
+const PALETTE = Array.from({ length: BUCKETS }, (_, i) => {
+  const alpha = (i + 0.5) / BUCKETS;
+  return `rgba(226, 219, 255, ${alpha.toFixed(3)})`;
+});
+
+const MAX_FPS_INTERVAL = 1000 / 30;
+
 /**
  * Very light, dependency-free 3D point-field used to fill empty page space.
  * Draws a slowly rotating perspective sphere with two orbit rings.
@@ -49,7 +59,6 @@ function buildRing(count: number, radius: number): Particle[] {
 export default function AmbientField() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -58,17 +67,33 @@ export default function AmbientField() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const sphere = buildSphere(230);
-    const rings = [buildRing(84, 1.45), buildRing(64, 1.78)];
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reduceMotion = motionQuery.matches;
+
+    const compact = wrap.clientWidth < 640;
+    const sphere = buildSphere(compact ? 150 : 230);
+    const rings = [
+      buildRing(compact ? 54 : 84, 1.45),
+      buildRing(compact ? 40 : 64, 1.78),
+    ];
+
+    const count = sphere.length + rings[0].length + rings[1].length;
+
+    /* Reused frame buffers — no per-frame allocations. */
+    const px = new Float32Array(count);
+    const py = new Float32Array(count);
+    const pr = new Float32Array(count);
+    const pa = new Float32Array(count);
 
     let width = 0;
     let height = 0;
     let frame = 0;
     let visible = true;
+    let lastDraw = 0;
 
     const resize = () => {
       const rect = wrap.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       width = rect.width;
       height = rect.height;
       canvas.width = Math.max(1, Math.round(width * dpr));
@@ -79,8 +104,9 @@ export default function AmbientField() {
     };
 
     const draw = (time: number) => {
-      ctx.clearRect(0, 0, width, height);
       if (!width || !height) return;
+
+      ctx.clearRect(0, 0, width, height);
 
       const cx = width / 2;
       const cy = height / 2;
@@ -93,49 +119,73 @@ export default function AmbientField() {
       const cosTilt = Math.cos(tilt);
       const sinTilt = Math.sin(tilt);
 
-      const project = (p: Particle) => {
-        const x1 = p.x * cosSpin - p.z * sinSpin;
-        const z1 = p.x * sinSpin + p.z * cosSpin;
-        const y2 = p.y * cosTilt - z1 * sinTilt;
-        const z2 = p.y * sinTilt + z1 * cosTilt;
-        const perspective = fov / (fov + z2 * 0.85);
-        return {
-          x: cx + x1 * base * perspective,
-          y: cy + y2 * base * perspective,
-          depth: perspective,
-          size: p.size,
-        };
-      };
-
-      const paint = (points: Particle[], maxAlpha: number) => {
-        for (const point of points) {
-          const { x, y, depth, size } = project(point);
-          const alpha = Math.min(1, Math.max(0, (depth - 0.62) * 1.9)) * maxAlpha;
+      let n = 0;
+      const project = (points: Particle[], maxAlpha: number) => {
+        for (const p of points) {
+          const x1 = p.x * cosSpin - p.z * sinSpin;
+          const z1 = p.x * sinSpin + p.z * cosSpin;
+          const y2 = p.y * cosTilt - z1 * sinTilt;
+          const z2 = p.y * sinTilt + z1 * cosTilt;
+          const perspective = fov / (fov + z2 * 0.85);
+          const alpha = Math.min(1, Math.max(0, (perspective - 0.62) * 1.9)) * maxAlpha;
           if (alpha <= 0.01) continue;
-          ctx.beginPath();
-          ctx.fillStyle = `rgba(226, 219, 255, ${alpha.toFixed(3)})`;
-          ctx.arc(x, y, size * 1.25 * depth, 0, Math.PI * 2);
-          ctx.fill();
+          px[n] = cx + x1 * base * perspective;
+          py[n] = cy + y2 * base * perspective;
+          pr[n] = p.size * 1.25 * perspective;
+          pa[n] = alpha;
+          n++;
         }
       };
 
-      paint(rings[0], 0.34);
-      paint(rings[1], 0.22);
-      paint(sphere, 0.62);
+      project(rings[0], 0.34);
+      project(rings[1], 0.22);
+      project(sphere, 0.62);
+
+      for (let bucket = 0; bucket < BUCKETS; bucket++) {
+        const lower = bucket / BUCKETS;
+        const upper = (bucket + 1) / BUCKETS;
+        let started = false;
+
+        for (let i = 0; i < n; i++) {
+          const alpha = pa[i];
+          if (alpha <= lower || alpha > upper) continue;
+          if (!started) {
+            ctx.beginPath();
+            started = true;
+          }
+          ctx.moveTo(px[i] + pr[i], py[i]);
+          ctx.arc(px[i], py[i], pr[i], 0, Math.PI * 2);
+        }
+
+        if (started) {
+          ctx.fillStyle = PALETTE[bucket];
+          ctx.fill();
+        }
+      }
     };
 
     const loop = (time: number) => {
-      if (visible) draw(time);
       frame = requestAnimationFrame(loop);
+      if (!visible || reduceMotion || document.hidden) return;
+      if (time - lastDraw < MAX_FPS_INTERVAL) return;
+      lastDraw = time;
+      draw(time);
     };
 
     resize();
 
     if (reduceMotion) {
       draw(0);
+      frame = requestAnimationFrame(loop);
     } else {
       frame = requestAnimationFrame(loop);
     }
+
+    const handleMotionChange = () => {
+      reduceMotion = motionQuery.matches;
+      if (reduceMotion) draw(0);
+    };
+    motionQuery.addEventListener("change", handleMotionChange);
 
     const ro = new ResizeObserver(() => {
       resize();
@@ -146,6 +196,7 @@ export default function AmbientField() {
     const io = new IntersectionObserver(
       ([entry]) => {
         visible = entry.isIntersecting;
+        if (visible && reduceMotion) draw(0);
       },
       { rootMargin: "120px" }
     );
@@ -153,10 +204,11 @@ export default function AmbientField() {
 
     return () => {
       cancelAnimationFrame(frame);
+      motionQuery.removeEventListener("change", handleMotionChange);
       ro.disconnect();
       io.disconnect();
     };
-  }, [reduceMotion]);
+  }, []);
 
   return (
     <div ref={wrapRef} className={styles.field} aria-hidden="true">

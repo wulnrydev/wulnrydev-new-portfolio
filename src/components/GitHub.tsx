@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
 import Reveal from "./Reveal";
 import styles from "./GitHub.module.css";
 import { useLang } from "@/context/LanguageContext";
@@ -113,10 +114,35 @@ function RepoCard({ repo }: { repo: GithubRepo }) {
 export default function GitHub() {
   const { t } = useLang();
   const g = t.github;
-  const { repos, stats, loading, error } = useGithub();
+  const sectionRef = useRef<HTMLElement>(null);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      setActive(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setActive(true);
+        observer.disconnect();
+      },
+      { rootMargin: "600px 0px" }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  const { repos, stats, loading, error } = useGithub(active);
 
   return (
-    <section id="github" className={styles.section}>
+    <section id="github" className={styles.section} ref={sectionRef}>
       <Reveal width="100%">
         <div className={styles.dividerRow}>
           <span className={styles.dividerLine} />

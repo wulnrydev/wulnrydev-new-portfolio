@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Lyrics.module.css";
 import type { LyricLine } from "@/data/track";
 
@@ -11,12 +10,24 @@ interface LyricsProps {
   visible?: boolean;
 }
 
-const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduced(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+
+  return reduced;
+}
 
 export default function Lyrics({ lines, activeIndex, visible = true }: LyricsProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     if (!visible) return;
@@ -36,66 +47,37 @@ export default function Lyrics({ lines, activeIndex, visible = true }: LyricsPro
   }, [activeIndex, reduceMotion, visible]);
 
   return (
-    <motion.div
-      className={styles.panel}
-      initial={false}
-      animate={{ opacity: visible ? 1 : 0 }}
-      transition={{ duration: reduceMotion ? 0 : 0.9, ease: SOFT_EASE }}
-      style={{ pointerEvents: visible ? "auto" : "none" }}
+    <div
+      className={`${styles.panel} ${visible ? styles.panelVisible : ""}`}
       aria-hidden={!visible}
     >
-      <div className={styles.viewport} ref={viewportRef} aria-live="polite">
+      <div className={styles.viewport} ref={viewportRef}>
         <div className={styles.track}>
           {lines.map((line, index) => {
             const isActive = index === activeIndex;
             const isPast = index < activeIndex;
 
-            const color = isActive
-              ? line.emphasis
-                ? "#d9ccff"
-                : "#ffffff"
-              : isPast
-                ? "rgba(255, 255, 255, 0.42)"
-                : "rgba(255, 255, 255, 0.46)";
-
-            const state = reduceMotion
-              ? { opacity: isActive ? 1 : isPast ? 0.3 : 0.4, scale: 1, y: 0, filter: "blur(0px)" }
-              : isActive
-                ? { opacity: 1, scale: 1.04, y: 0, filter: "blur(0px)" }
-                : isPast
-                  ? { opacity: 0.18, scale: 0.97, y: -10, filter: "blur(3px)" }
-                  : { opacity: 0.34, scale: 0.985, y: 10, filter: "blur(1.6px)" };
-
             return (
-              <motion.p
+              <p
                 key={line.time}
-                ref={(el: HTMLParagraphElement | null) => {
+                ref={(el) => {
                   lineRefs.current[index] = el;
                 }}
                 className={[
                   styles.line,
+                  isActive ? styles.lineActive : isPast ? styles.linePast : "",
                   line.emphasis ? styles.emphasis : "",
-                  isActive && line.emphasis ? styles.emphasisActive : "",
                 ]
                   .filter(Boolean)
                   .join(" ")}
                 aria-current={isActive ? "true" : undefined}
-                initial={false}
-                animate={{ ...state, color }}
-                transition={{
-                  default: { duration: reduceMotion ? 0 : 0.6, ease: SOFT_EASE },
-                  scale: reduceMotion
-                    ? { duration: 0 }
-                    : { type: "spring", stiffness: 170, damping: 24, mass: 0.7 },
-                  filter: { duration: reduceMotion ? 0 : 0.5, ease: "easeOut" },
-                }}
               >
                 {line.text}
-              </motion.p>
+              </p>
             );
           })}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

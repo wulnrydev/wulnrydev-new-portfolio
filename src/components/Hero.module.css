@@ -368,6 +368,49 @@
   opacity: 0.85;
 }
 
+/* ── Entrance ─────────────────────────────── */
+/* Purely CSS so nothing waits for hydration; the title block only moves,
+   which keeps the LCP text painted from the first frame. */
+.fadeUp {
+  animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.riseUp {
+  animation: riseUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes riseUp {
+  from {
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ── Responsive ───────────────────────────── */
 @media (max-width: 860px) {
   .inner {
@@ -388,5 +431,12 @@
   }
   .stats {
     gap: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeUp,
+  .riseUp {
+    animation: none;
   }
 }
