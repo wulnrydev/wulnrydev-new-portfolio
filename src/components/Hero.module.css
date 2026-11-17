@@ -344,6 +344,19 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+.cardBioBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cardBioText {
+  font-size: 0.78rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.42);
+}
+
 .onlineDot {
   width: 7px;
   height: 7px;

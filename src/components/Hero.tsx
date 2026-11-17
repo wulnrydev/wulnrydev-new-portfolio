@@ -232,6 +232,13 @@ export default function Hero() {
               <span className={styles.cardValue}>{discordUser?.id || "902241075316535366"}</span>
             </div>
 
+            {/* Discord bio */}
+            <div className={styles.cardBioBlock}>
+              <span className={styles.cardBioText}>
+                It always seems impossible until it&apos;s done.
+              </span>
+            </div>
+
             <div className={styles.cardDivider} />
 
             {/* CTA */}
