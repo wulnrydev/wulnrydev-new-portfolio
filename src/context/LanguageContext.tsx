@@ -14,6 +14,10 @@ export const translations = {
       pastProjects: "Past Projects",
       openMenu: "Open menu",
       closeMenu: "Close menu",
+      language: "Language",
+      langSwitcher: "Language switcher",
+      switchToEnglish: "Switch to English",
+      switchToTurkish: "Switch to Turkish",
     },
     // Hero
     hero: {
@@ -36,12 +40,21 @@ export const translations = {
         offline: "Offline",
       },
     },
+    // Music player
+    player: {
+      play: "Play music",
+      pause: "Pause music",
+      mute: "Mute",
+      unmute: "Unmute",
+      volume: "Volume",
+    },
     // Past Projects
     pastProjects: {
       badge: "Archive",
       title: "Past Projects",
       sub: "Notable projects and servers I've worked on",
       marimossRole: "Lead Developer & Co-Owner",
+      celestialRole: "Founder & Lead Developer",
       serverLabel: "Server",
       roleLabel: "Role",
       statusLabel: "Status",
@@ -144,6 +157,10 @@ export const translations = {
       pastProjects: "Geçmiş Projeler",
       openMenu: "Menüyü aç",
       closeMenu: "Menüyü kapat",
+      language: "Dil",
+      langSwitcher: "Dil seçici",
+      switchToEnglish: "İngilizceye geç",
+      switchToTurkish: "Türkçeye geç",
     },
     // Hero
     hero: {
@@ -166,12 +183,21 @@ export const translations = {
         offline: "Çevrimdışı",
       },
     },
+    // Music player
+    player: {
+      play: "Müziği başlat",
+      pause: "Müziği duraklat",
+      mute: "Sesi kapat",
+      unmute: "Sesi aç",
+      volume: "Ses seviyesi",
+    },
     // Past Projects
     pastProjects: {
       badge: "Arşiv",
-      title: "Geçmiş Bilindik Projelerim",
-      sub: "Daha önce liderliğini ve geliştirmesini yaptığım bilindik projeler",
+      title: "Geçmiş Projelerim",
+      sub: "Daha önce liderliğini ve geliştirmesini yaptığım projeler",
       marimossRole: "Baş Geliştirici & Ortak Kurucu",
+      celestialRole: "Kurucu & Baş Geliştirici",
       serverLabel: "Sunucu",
       roleLabel: "Ünvan",
       statusLabel: "Durum",
@@ -287,6 +313,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem("lang") as Lang | null;
     if (stored === "en" || stored === "tr") setLangState(stored);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   const setLang = (l: Lang) => {
     setLangState(l);

@@ -1,0 +1,66 @@
+.panel {
+  margin: 3.5rem auto 0;
+  width: 100%;
+  max-width: 760px;
+}
+
+.viewport {
+  position: relative;
+  height: 340px;
+  /* Programmatic scrolling only — user scroll is blocked. */
+  overflow: hidden;
+  scroll-behavior: smooth;
+  overscroll-behavior: none;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 22%,
+    #000 78%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+}
+
+.viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  /* Extra room so the first and last lines can sit dead centre. */
+  padding: 152px 0.5rem;
+  text-align: center;
+}
+
+.line {
+  position: relative;
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  transform-origin: center center;
+  will-change: opacity, transform, filter;
+}
+
+/* The hook line gets a little more presence */
+.emphasisActive {
+  text-shadow: 0 0 30px rgba(168, 140, 255, 0.35);
+}
+
+@media (max-width: 860px) {
+  .panel {
+    margin-top: 2.5rem;
+  }
+  .viewport {
+    height: 280px;
+  }
+  .track {
+    padding: 124px 0.25rem;
+  }
+  .line {
+    font-size: clamp(1rem, 4.2vw, 1.15rem);
+  }
+}

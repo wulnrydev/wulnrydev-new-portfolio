@@ -1,28 +1,10 @@
-.base {
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+.root {
+  position: relative;
+  will-change: opacity, transform;
 }
 
-.visible {
-  opacity: 1;
-  transform: translate(0, 0);
-}
-
-.hiddenUp {
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.hiddenDown {
-  opacity: 0;
-  transform: translateY(-30px);
-}
-
-.hiddenLeft {
-  opacity: 0;
-  transform: translateX(-30px);
-}
-
-.hiddenRight {
-  opacity: 0;
-  transform: translateX(30px);
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    will-change: auto;
+  }
 }

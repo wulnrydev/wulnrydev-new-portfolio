@@ -19,6 +19,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -26,8 +27,15 @@ body {
   color: var(--text-primary);
   font-family: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01" 1, "cv11" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+section {
+  scroll-margin-top: 80px;
 }
 
 a { text-decoration: none; color: inherit; }
@@ -37,6 +45,15 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 ::selection {
   background: rgba(168, 85, 247, 0.4);
   color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 
 ::-webkit-scrollbar { width: 8px; }

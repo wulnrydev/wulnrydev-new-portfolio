@@ -4,17 +4,18 @@ import styles from "./Navbar.module.css";
 import { useLang } from "@/context/LanguageContext";
 
 function LangSwitcher() {
-  const { lang, setLang } = useLang();
+  const { lang, setLang, t } = useLang();
+  const n = t.nav;
 
   return (
-    <div className={styles.langSwitcher} id="nav-lang-switcher" aria-label="Language switcher">
+    <div className={styles.langSwitcher} id="nav-lang-switcher" aria-label={n.langSwitcher}>
       {/* sliding track */}
       <div className={`${styles.langSwitcherTrack} ${lang === "tr" ? styles.right : ""}`} />
       <button
         className={`${styles.langBtn} ${lang === "en" ? styles.active : ""}`}
         onClick={() => setLang("en")}
         aria-pressed={lang === "en"}
-        aria-label="Switch to English"
+        aria-label={n.switchToEnglish}
       >
         EN
       </button>
@@ -22,7 +23,7 @@ function LangSwitcher() {
         className={`${styles.langBtn} ${lang === "tr" ? styles.active : ""}`}
         onClick={() => setLang("tr")}
         aria-pressed={lang === "tr"}
-        aria-label="Türkçeye geç"
+        aria-label={n.switchToTurkish}
       >
         TR
       </button>
@@ -112,13 +113,13 @@ export default function Navbar() {
 
           {/* Language switcher in drawer */}
           <div className={styles.drawerLangRow}>
-            <span className={styles.drawerLangLabel}>Language</span>
+            <span className={styles.drawerLangLabel}>{n.language}</span>
             <div className={styles.drawerLangSwitcher}>
               <button
                 className={`${styles.langBtn} ${lang === "en" ? styles.active : ""}`}
                 onClick={() => setLang("en")}
                 aria-pressed={lang === "en"}
-                aria-label="Switch to English"
+                aria-label={n.switchToEnglish}
               >
                 EN
               </button>
@@ -126,7 +127,7 @@ export default function Navbar() {
                 className={`${styles.langBtn} ${lang === "tr" ? styles.active : ""}`}
                 onClick={() => setLang("tr")}
                 aria-pressed={lang === "tr"}
-                aria-label="Türkçeye geç"
+                aria-label={n.switchToTurkish}
               >
                 TR
               </button>

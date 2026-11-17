@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import styles from "./Hero.module.css";
 import { useLanyard } from "@/hooks/useLanyard";
 import { useLang } from "@/context/LanguageContext";
@@ -59,11 +60,10 @@ function StatCounter({ end, prefix = "", suffix = "", delay = 0 }: {
   );
 }
 
-import ThreeScene from "./ThreeScene";
-
 export default function Hero() {
   const { t } = useLang();
   const h = t.hero;
+  const reduceMotion = useReducedMotion();
 
   const { output, done } = useTypewriter(h.typewriter);
   const lanyard = useLanyard();
@@ -80,33 +80,54 @@ export default function Hero() {
   const activity = lanyard?.activities?.find(a => a.type === 0 || a.type === 2);
   const spotify = lanyard?.spotify;
 
+  const container: Variants = {
+    hidden: {},
+    show: { transition: { staggerChildren: reduceMotion ? 0 : 0.07, delayChildren: 0.05 } },
+  };
+
+  const item: Variants = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 18 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+    },
+  };
+
   return (
     <section id="hero" className={styles.section}>
-      <ThreeScene />
-      <div className={styles.inner}>
+      <div className={styles.ambient} aria-hidden="true">
+        <div className={styles.ambientGlow} />
+        <div className={styles.ambientLine} />
+      </div>
 
-        {/* ── LEFT COLUMN ── */}
-        <div className={styles.left}>
+      <div className={styles.inner}>
+        <motion.div
+          className={styles.left}
+          variants={container}
+          initial="hidden"
+          animate="show"
+        >
           {/* Online badge */}
-          <div className={styles.badge} id="hero-badge">
+          <motion.div className={styles.badge} id="hero-badge" variants={item}>
             <span className={styles.dot} />
             {h.badge}
-          </div>
+          </motion.div>
 
           {/* Title */}
-          <div className={styles.titleBlock}>
+          <motion.div className={styles.titleBlock} variants={item}>
             <p className={styles.greeting}>{h.greeting}</p>
             <h1 className={styles.name}>wulnrydev</h1>
-          </div>
+          </motion.div>
 
           {/* Typewriter description */}
-          <p className={styles.desc} aria-label={h.typewriter}>
+          <motion.p className={styles.desc} aria-label={h.typewriter} variants={item}>
             {output}
             <span className={`${styles.cursor} ${done ? styles.cursorBlink : ""}`} aria-hidden="true">|</span>
-          </p>
+          </motion.p>
 
           {/* Buttons */}
-          <div className={styles.btns}>
+          <motion.div className={styles.btns} variants={item}>
             <a id="hero-contact-btn" href="mailto:em1rhqnzw@gmail.com" className={styles.btnPrimary}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -119,10 +140,10 @@ export default function Hero() {
               </svg>
               {h.viewGithub}
             </a>
-          </div>
+          </motion.div>
 
           {/* Stats row */}
-          <div className={styles.stats}>
+          <motion.div className={styles.stats} variants={item}>
             <div className={styles.stat} id="stat-experience">
               <StatCounter end={6} prefix="+" delay={300} />
               <span className={styles.statLabel}>{h.yearsExp}</span>
@@ -132,16 +153,22 @@ export default function Hero() {
               <StatCounter end={15} prefix="+" delay={600} />
               <span className={styles.statLabel}>{h.technologies}</span>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* ── RIGHT COLUMN — Profile Card ── */}
-        <div className={styles.right}>
+        <motion.div
+          className={styles.right}
+          initial={{ opacity: 0, y: reduceMotion ? 0 : 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.85, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div className={styles.card} id="hero-profile-card">
             {/* Card header */}
             <div className={styles.cardHeader}>
               <div className={styles.avatarWrapper}>
                 {discordUser ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={`https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png?size=128`}
                     alt="Discord Avatar"
@@ -209,8 +236,7 @@ export default function Hero() {
               {h.viewProfile}
             </a>
           </div>
-        </div>
-
+        </motion.div>
       </div>
     </section>
   );

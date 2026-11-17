@@ -1,9 +1,38 @@
 .section {
-  min-height: 100vh;
+  min-height: 92vh;
   display: flex;
   align-items: center;
-  padding: 80px 2.5rem 3rem;
+  padding: 9rem 2.5rem 4rem;
   position: relative;
+  overflow: hidden;
+}
+
+/* Soft ambient light — replaces the old WebGL background */
+.ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambientGlow {
+  position: absolute;
+  top: -18%;
+  left: 8%;
+  width: min(760px, 90vw);
+  height: min(760px, 90vw);
+  background: radial-gradient(circle at center, rgba(140, 110, 255, 0.13), transparent 62%);
+  filter: blur(10px);
+}
+
+.ambientLine {
+  position: absolute;
+  top: 22%;
+  right: -10%;
+  width: 55%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+  transform: rotate(-18deg);
 }
 
 .inner {
@@ -355,7 +384,7 @@
 
 @media (max-width: 480px) {
   .section {
-    padding: 80px 1.25rem 3rem;
+    padding: 8rem 1.25rem 3rem;
   }
   .stats {
     gap: 1rem;

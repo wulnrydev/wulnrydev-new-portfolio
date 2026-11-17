@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import Loader from "@/components/Loader";
 import { LanguageProvider } from "@/context/LanguageContext";
 
 export const viewport: Viewport = {
@@ -77,10 +76,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <LanguageProvider>
-          <Loader />
-          {children}
-        </LanguageProvider>
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );
