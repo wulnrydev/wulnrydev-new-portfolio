@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Hero.module.css";
 import { useLanyard } from "@/hooks/useLanyard";
+import LiquidDecor from "./LiquidDecor";
 import { useLang } from "@/context/LanguageContext";
 
 function useTypewriter(text: string, speed = 32, delay = 700) {
@@ -93,6 +94,18 @@ export default function Hero() {
   const { ref: typeRef, typed } = useTypewriter(h.typewriter);
   const lanyard = useLanyard();
 
+  /* Show a skeleton until Lanyard answers, but never longer than a few
+     seconds — the card still renders sensibly if the socket never connects. */
+  const [profilePending, setProfilePending] = useState(true);
+  useEffect(() => {
+    if (lanyard) {
+      setProfilePending(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setProfilePending(false), 4000);
+    return () => window.clearTimeout(timer);
+  }, [lanyard]);
+
   const discordUser = lanyard?.discord_user;
   const status = lanyard?.discord_status || "offline";
   const statusColors = {
@@ -107,6 +120,7 @@ export default function Hero() {
 
   return (
     <section id="hero" className={styles.section}>
+      <LiquidDecor className={styles.decor} />
       <div className={styles.ambient} aria-hidden="true">
         <div className={styles.ambientGlow} />
         <div className={styles.ambientLine} />
@@ -183,6 +197,8 @@ export default function Hero() {
                     decoding="async"
                     className={styles.avatarImg}
                   />
+                ) : profilePending ? (
+                  <div className={styles.avatarSkeleton} aria-hidden="true" />
                 ) : (
                   <div className={styles.avatar} aria-label="wulnrydev avatar">
                     <span>W</span>
@@ -194,8 +210,17 @@ export default function Hero() {
                 />
               </div>
               <div className={styles.cardHeaderInfo}>
-                <span className={styles.cardName}>{discordUser?.global_name || "wulnrydev"}</span>
-                <span className={styles.cardHandle}>@{discordUser?.username || "wulnrydev"}</span>
+                {profilePending ? (
+                  <>
+                    <span className={`${styles.skeletonLine} ${styles.skeletonName}`} aria-hidden="true" />
+                    <span className={`${styles.skeletonLine} ${styles.skeletonHandle}`} aria-hidden="true" />
+                  </>
+                ) : (
+                  <>
+                    <span className={styles.cardName}>{discordUser?.global_name || "wulnrydev"}</span>
+                    <span className={styles.cardHandle}>@{discordUser?.username || "wulnrydev"}</span>
+                  </>
+                )}
               </div>
             </div>
 

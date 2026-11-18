@@ -47,6 +47,12 @@ export const metadata: Metadata = {
   creator: "wulnrydev",
   publisher: "wulnrydev",
   category: "technology",
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
   alternates: {
     canonical: "/",
     languages: {
@@ -149,6 +155,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
         <LanguageProvider>{children}</LanguageProvider>
         <script
           type="application/ld+json"

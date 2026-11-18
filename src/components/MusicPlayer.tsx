@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./MusicPlayer.module.css";
 import Lyrics from "./Lyrics";
+import DecoImage from "./DecoImage";
 import { LYRICS, TRACK } from "@/data/track";
 import { useLang } from "@/context/LanguageContext";
 
@@ -217,6 +218,9 @@ export default function MusicPlayer() {
 
   return (
     <section id="now-playing" className={styles.section} ref={sectionRef}>
+      {/* Metallic heart on the right of the track stage */}
+      <DecoImage src="/heart.webp" className={styles.heart} />
+
       <div className={styles.stage}>
         <h2 className={styles.title}>{TRACK.title}</h2>
 

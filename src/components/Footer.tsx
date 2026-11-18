@@ -1,5 +1,6 @@
 "use client";
 import styles from "./Footer.module.css";
+import DecoImage from "./DecoImage";
 import { useLang } from "@/context/LanguageContext";
 
 export default function Footer() {
@@ -14,6 +15,10 @@ export default function Footer() {
         <div className={styles.glowOrb2} />
         <div className={styles.glowOrb3} />
       </div>
+
+      {/* Metallic decorations at the very bottom of the page */}
+      <DecoImage src="/ribbon.webp" className={styles.shapeRibbon} />
+      <DecoImage src="/flower.webp" className={styles.shapeFlower} />
 
       <div className={styles.inner}>
         <div className={styles.topRow}>

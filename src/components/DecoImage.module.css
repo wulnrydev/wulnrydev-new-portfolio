@@ -1,0 +1,41 @@
+.wrap {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shown {
+  opacity: 1;
+  transform: none;
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.float {
+  animation: decoFloat 14s ease-in-out infinite alternate;
+}
+
+@keyframes decoFloat {
+  from { transform: translate3d(0, 0, 0) rotate(-2deg); }
+  to   { transform: translate3d(0, -10px, 0) rotate(2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .float {
+    animation: none;
+  }
+}

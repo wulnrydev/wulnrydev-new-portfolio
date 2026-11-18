@@ -5,6 +5,13 @@
   padding: 2rem 2.5rem 2.5rem;
 }
 
+/* Metallic heart to the right of the stage */
+.heart {
+  top: 24%;
+  right: 2%;
+  width: clamp(100px, 13vw, 180px);
+}
+
 /* Centered, card-less control stage */
 .stage {
   display: flex;
@@ -205,9 +212,22 @@
 }
 
 /* ── Responsive ── */
+@media (max-width: 900px) {
+  .heart {
+    width: 96px;
+    right: 0;
+  }
+}
+
 @media (max-width: 640px) {
   .section {
     padding: 1.5rem 1.25rem 2rem;
+  }
+
+  .heart {
+    width: 64px;
+    top: 1.25rem;
+    right: 0.5rem;
   }
 
   .transport {

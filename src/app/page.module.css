@@ -123,6 +123,30 @@ a.secondary {
   }
 }
 
+/* ── Skills decorative shapes (outside the Skills content, right side) ── */
+.skillsArea {
+  position: relative;
+}
+
+.skillStar {
+  top: 2.5%;
+  right: 1.5%;
+  width: clamp(80px, 8vw, 118px);
+}
+
+.skillInfinity {
+  top: 44%;
+  left: 1.5%;
+  width: clamp(86px, 9vw, 128px);
+}
+
+@media (max-width: 820px) {
+  .skillStar,
+  .skillInfinity {
+    display: none;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   .logo {
     filter: invert();

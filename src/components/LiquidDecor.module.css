@@ -1,0 +1,66 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  display: block;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Holographic chrome star — transparent PNG. */
+.shapeTwo {
+  bottom: 6%;
+  left: 1%;
+  width: clamp(120px, 15vw, 200px);
+  aspect-ratio: 1;
+  background-image: url("/shape2.webp");
+  opacity: 0.85;
+  animation: driftTwo 18s ease-in-out infinite alternate;
+}
+
+/* Liquid-metal loop — transparent WebP. */
+.shapeThree {
+  top: 38%;
+  right: -4%;
+  width: clamp(240px, 32vw, 440px);
+  aspect-ratio: 1400 / 909;
+  background-image: url("/shape3.webp");
+  opacity: 0.62;
+  animation: driftThree 26s ease-in-out infinite alternate;
+}
+
+@keyframes driftTwo {
+  from { transform: translate3d(0, 0, 0) rotate(0deg); }
+  to   { transform: translate3d(16px, -20px, 0) rotate(8deg); }
+}
+
+@keyframes driftThree {
+  from { transform: translate3d(0, 0, 0) rotate(4deg); }
+  to   { transform: translate3d(-18px, -22px, 0) rotate(-2deg); }
+}
+
+@media (max-width: 900px) {
+  .shapeThree {
+    width: 58vw;
+    right: -20%;
+    opacity: 0.42;
+  }
+  .shapeTwo {
+    width: 26vw;
+    bottom: 2%;
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shape {
+    animation: none !important;
+  }
+}

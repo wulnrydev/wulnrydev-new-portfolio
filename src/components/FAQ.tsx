@@ -41,26 +41,40 @@ export default function FAQ() {
               <div
                 key={idx}
                 className={`${styles.item} ${isOpen ? styles.open : ""}`}
-                onClick={() => toggle(idx)}
               >
-                <div className={styles.questionRow}>
-                  <h3 className={styles.question}>{faq.question}</h3>
-                  <div className={styles.iconBox}>
-                    <svg
-                      width="16" height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={`${styles.icon} ${isOpen ? styles.iconOpen : ""}`}
-                    >
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                  </div>
-                </div>
-                <div className={styles.answerWrapper} style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}>
+                <h3 className={styles.questionHeading}>
+                  <button
+                    type="button"
+                    id={`faq-question-${idx}`}
+                    className={styles.questionButton}
+                    onClick={() => toggle(idx)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${idx}`}
+                  >
+                    <span className={styles.question}>{faq.question}</span>
+                    <span className={styles.iconBox} aria-hidden="true">
+                      <svg
+                        width="16" height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={`${styles.icon} ${isOpen ? styles.iconOpen : ""}`}
+                      >
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </span>
+                  </button>
+                </h3>
+                <div
+                  id={`faq-answer-${idx}`}
+                  role="region"
+                  aria-labelledby={`faq-question-${idx}`}
+                  className={styles.answerWrapper}
+                  style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+                >
                   <div className={styles.answerInner}>
                     <p className={styles.answer}>{faq.answer}</p>
                   </div>

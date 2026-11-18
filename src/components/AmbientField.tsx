@@ -50,7 +50,7 @@ const PALETTE = Array.from({ length: BUCKETS }, (_, i) => {
   return `rgba(226, 219, 255, ${alpha.toFixed(3)})`;
 });
 
-const MAX_FPS_INTERVAL = 1000 / 30;
+const MAX_FPS_INTERVAL = 1000 / 20;
 
 /**
  * Very light, dependency-free 3D point-field used to fill empty page space.
@@ -71,10 +71,10 @@ export default function AmbientField() {
     let reduceMotion = motionQuery.matches;
 
     const compact = wrap.clientWidth < 640;
-    const sphere = buildSphere(compact ? 150 : 230);
+    const sphere = buildSphere(compact ? 80 : 140);
     const rings = [
-      buildRing(compact ? 54 : 84, 1.45),
-      buildRing(compact ? 40 : 64, 1.78),
+      buildRing(compact ? 28 : 50, 1.45),
+      buildRing(compact ? 22 : 38, 1.78),
     ];
 
     const count = sphere.length + rings[0].length + rings[1].length;
@@ -93,7 +93,7 @@ export default function AmbientField() {
 
     const resize = () => {
       const rect = wrap.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       width = rect.width;
       height = rect.height;
       canvas.width = Math.max(1, Math.round(width * dpr));

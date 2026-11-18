@@ -60,6 +60,21 @@
   50%       { opacity: 0.9; transform: translateY(-10px) scale(1.05); }
 }
 
+/* ─── Metallic corner shapes ─── */
+.shapeRibbon {
+  left: 1.5%;
+  bottom: -12px;
+  z-index: 1;
+  width: clamp(110px, 14vw, 190px);
+}
+
+.shapeFlower {
+  right: 1.5%;
+  bottom: -18px;
+  z-index: 1;
+  width: clamp(90px, 12vw, 160px);
+}
+
 /* ─── Top border line with glow ─── */
 .footer::before {
   content: "";
@@ -183,4 +198,6 @@
   .links { gap: 1.25rem; flex-wrap: wrap; }
   .bottomRow { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
   .inner { padding: 2rem 1.25rem 1.5rem; }
+  .shapeRibbon { width: 78px; }
+  .shapeFlower { width: 68px; }
 }

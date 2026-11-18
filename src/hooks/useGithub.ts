@@ -50,6 +50,39 @@ export interface GithubData {
 
 const API = "https://api.github.com";
 
+/* GitHub's unauthenticated API is rate limited to 60 requests/hour per IP.
+   A short-lived cache keeps repeat visits from spending that budget and gives
+   the section a graceful fallback if the limit is hit. */
+const CACHE_KEY = "wulnrydev:github:v1";
+const CACHE_TTL = 30 * 60 * 1000;
+
+interface CachedGithub {
+  at: number;
+  user: GithubUser;
+  repos: GithubRepo[];
+  stats: GithubStats;
+}
+
+function readCache(): CachedGithub | null {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as CachedGithub;
+    if (!parsed || typeof parsed.at !== "number" || !parsed.stats) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function writeCache(entry: CachedGithub) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(entry));
+  } catch {
+    /* Storage can be unavailable in private mode — caching is optional. */
+  }
+}
+
 export function useGithub(enabled = true): GithubData {
   const [user, setUser] = useState<GithubUser | null>(null);
   const [repos, setRepos] = useState<GithubRepo[]>([]);
@@ -64,6 +97,18 @@ export function useGithub(enabled = true): GithubData {
     if (!enabled) return;
 
     let cancelled = false;
+    const cached = readCache();
+
+    /* Fresh cache: no network request at all. */
+    if (cached && Date.now() - cached.at < CACHE_TTL) {
+      setUser(cached.user);
+      setRepos(cached.repos);
+      setStats(cached.stats);
+      setLoading(false);
+      return () => {
+        cancelled = true;
+      };
+    }
 
     const load = async () => {
       try {
@@ -100,18 +145,37 @@ export function useGithub(enabled = true): GithubData {
 
         if (cancelled) return;
 
-        setUser(userData);
-        setRepos(ownRepos);
-        setStats({
-          repoCount: ownRepos.length,
-          totalStars,
-          totalForks,
-          followers: userData.followers,
-          topLanguages,
-        });
+        const entry: CachedGithub = {
+          at: Date.now(),
+          user: userData,
+          repos: ownRepos,
+          stats: {
+            repoCount: ownRepos.length,
+            totalStars,
+            totalForks,
+            followers: userData.followers,
+            topLanguages,
+          },
+        };
+
+        setUser(entry.user);
+        setRepos(entry.repos);
+        setStats(entry.stats);
         setLoading(false);
+        writeCache(entry);
       } catch {
         if (cancelled) return;
+
+        /* Rate limit or network failure: show the last cached snapshot rather
+           than an empty error state. */
+        if (cached) {
+          setUser(cached.user);
+          setRepos(cached.repos);
+          setStats(cached.stats);
+          setLoading(false);
+          return;
+        }
+
         setError(true);
         setLoading(false);
       }

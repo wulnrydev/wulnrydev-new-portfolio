@@ -63,7 +63,6 @@
   background: #0a0a0a;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  cursor: pointer;
   overflow: hidden;
   transition: background 0.2s, border-color 0.2s;
 }
@@ -78,12 +77,28 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.questionRow {
+.questionHeading {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.questionButton {
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
   gap: 1rem;
+  text-align: left;
+  color: inherit;
+  border-radius: 12px;
+}
+
+.questionButton:focus-visible {
+  outline: 2px solid rgba(168, 85, 247, 0.75);
+  outline-offset: -2px;
+  border-radius: 12px;
 }
 
 .question {
@@ -132,4 +147,5 @@
   .section { padding: 0 1.25rem 5rem; }
   .question { font-size: 0.95rem; }
   .answer { font-size: 0.85rem; }
+  .questionButton { padding: 1.15rem; }
 }

@@ -49,7 +49,7 @@ export const getProjects = (lang: Lang): Project[] => [
       { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>, title: lang === "en" ? "Advanced Systems" : "Gelişmiş Sistemler", desc: lang === "en" ? "Advanced Skills System, Custom Kits, and Automated Events" : "Gelişmiş Yetenek Sistemi, Özel Kitler ve Otomatik Etkinlikler" },
       { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, title: lang === "en" ? "Performance" : "Performans", desc: lang === "en" ? "Handled 150+ concurrent players at a stable 20 TPS (25-30 MSPT)" : "150+ eşzamanlı oyuncuyu sabit 20 TPS'de (25-30 MSPT) destekledi" },
     ],
-    tech: [],
+    tech: ["Paper","Towny","Java","MySQL"],
     stats: [
       { label: lang === "en" ? "Design" : "Tasarım", value: lang === "en" ? "Modern" : "Modern" },
       { label: lang === "en" ? "Setup" : "Kurulum", value: lang === "en" ? "Configurable" : "Yapılandırılabilir" },
@@ -73,7 +73,7 @@ export const getProjects = (lang: Lang): Project[] => [
       { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>, title: lang === "en" ? "Live Testing" : "Canlı Test", desc: lang === "en" ? "Playable right now via the official testing IP: play.marimoss.net" : "Resmi test IP'si üzerinden hemen oynanabilir: play.marimoss.net" },
       { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>, title: lang === "en" ? "Optimized Core" : "Optimize Çekirdek", desc: lang === "en" ? "Built to handle massive farms and mob grinders with minimal TPS drops" : "Büyük farm'lar ve mob grinder'ları minimum TPS düşüşüyle desteklemek için tasarlandı" },
     ],
-    tech: [],
+    tech: ["Paper","Java","MySQL","Redis"],
     stats: [
       { label: lang === "en" ? "Season" : "Sezon", value: "2" },
       { label: "IP", value: "play.marimoss.net" },
@@ -90,7 +90,7 @@ export const getProjects = (lang: Lang): Project[] => [
     iconType: "server",
     accentColor: "#f472b6",
     features: [],
-    tech: [],
+    tech: ["Paper","Java","MySQL"],
     stats: [],
     isComingSoon: true,
   },
@@ -110,7 +110,7 @@ export const getProjects = (lang: Lang): Project[] => [
       { icon: "⚙️", title: lang === "en" ? "Fully Configurable" : "Tamamen Yapılandırılabilir", desc: lang === "en" ? "Define custom conditions, thresholds, and reward actions via config" : "Yapılandırma dosyası üzerinden özel koşullar, eşikler ve ödül eylemleri tanımlayın" },
       { icon: "📊", title: lang === "en" ? "Progress Tracking" : "İlerleme Takibi", desc: lang === "en" ? "Real-time tracking of player progress toward next rank with PAPI support" : "PAPI desteği ile bir sonraki rütbeye yönelik oyuncu ilerlemesinin gerçek zamanlı takibi" },
     ],
-    tech: [],
+    tech: ["Java","Spigot API","PlaceholderAPI","YAML"],
     stats: [
       { label: "Platform", value: "BuiltByBit" },
       { label: lang === "en" ? "Type" : "Tür", value: "Premium" },
@@ -133,7 +133,7 @@ export const getProjects = (lang: Lang): Project[] => [
       { icon: "💰", title: lang === "en" ? "Economy Integration" : "Ekonomi Entegrasyonu", desc: lang === "en" ? "Integrates with Vault-compatible economy plugins for ticket purchasing" : "Bilet satın almak için Vault uyumlu ekonomi eklentileriyle entegre çalışır" },
       { icon: "📢", title: lang === "en" ? "Notifications" : "Bildirimler", desc: lang === "en" ? "Players receive warnings as their nether time runs out" : "Oyuncular nether süreleri biterken uyarılır" },
     ],
-    tech: [],
+    tech: ["Java","Spigot API","Vault","YAML"],
     stats: [
       { label: "Platform", value: "BuiltByBit" },
       { label: lang === "en" ? "Type" : "Tür", value: "Premium" },
@@ -156,7 +156,7 @@ export const getProjects = (lang: Lang): Project[] => [
       { icon: "🔧", title: lang === "en" ? "Configurable Rules" : "Yapılandırılabilir Kurallar", desc: lang === "en" ? "Define per-world, per-region, and per-permission group limits" : "Dünya başına, bölge başına ve yetki grubu başına sınırlar tanımlayın" },
       { icon: "🚨", title: lang === "en" ? "Violation Alerts" : "İhlal Uyarıları", desc: lang === "en" ? "Notifies admins and players when limits are approached or exceeded" : "Sınırlara yaklaşıldığında veya aşıldığında yetkilileri ve oyuncuları uyarır" },
     ],
-    tech: [],
+    tech: ["Java","Paper API","Async","YAML"],
     stats: [
       { label: lang === "en" ? "License" : "Lisans", value: lang === "en" ? "Open Source" : "Açık Kaynak" },
       { label: lang === "en" ? "Type" : "Tür", value: lang === "en" ? "Free" : "Ücretsiz" },
@@ -178,7 +178,7 @@ export const getProjects = (lang: Lang): Project[] => [
       { icon: "🖼️", title: lang === "en" ? "Modern GUI" : "Modern GUI", desc: lang === "en" ? "Beautiful, animated GUI menus for reward collection and preview" : "Ödül toplama ve önizleme için güzel, animasyonlu GUI menüleri" },
       { icon: "⚙️", title: lang === "en" ? "Fully Configurable" : "Tamamen Yapılandırılabilir", desc: lang === "en" ? "Define custom rewards, streak milestones, and cooldown periods" : "Özel ödüller, seri kilometre taşları ve bekleme süreleri tanımlayın" },
     ],
-    tech: [],
+    tech: ["Java","Spigot API","GUI","YAML"],
     stats: [
       { label: lang === "en" ? "License" : "Lisans", value: lang === "en" ? "Open Source" : "Açık Kaynak" },
       { label: lang === "en" ? "Type" : "Tür", value: lang === "en" ? "Free" : "Ücretsiz" },
@@ -201,7 +201,7 @@ export const getProjects = (lang: Lang): Project[] => [
       { icon: "🎯", title: lang === "en" ? "Competition Events" : "Rekabet Etkinlikleri", desc: lang === "en" ? "Timed events and challenges that reward top performers" : "En iyi performans gösterenleri ödüllendiren zamanlı etkinlikler ve zorluklar" },
       { icon: "📊", title: lang === "en" ? "PlaceholderAPI Support" : "PlaceholderAPI Desteği", desc: lang === "en" ? "Full PAPI integration for scoreboards, holograms, and chat" : "Skor tabloları, hologramlar ve sohbet için tam PAPI entegrasyonu" },
     ],
-    tech: [],
+    tech: ["Java","Paper API","PlaceholderAPI","YAML"],
     stats: [
       { label: lang === "en" ? "Category" : "Kategori", value: lang === "en" ? "Competition" : "Rekabet" },
       { label: lang === "en" ? "Type" : "Tür", value: "Premium" },
@@ -224,7 +224,7 @@ export const getProjects = (lang: Lang): Project[] => [
       { icon: "⚡", title: lang === "en" ? "Auto Command Execution" : "Otomatik Komut Yürütme", desc: lang === "en" ? "Automatically runs configured commands when fragment conversion is completed" : "Parçacık dönüşümü tamamlandığında yapılandırılmış komutları otomatik olarak çalıştırır" },
       { icon: "⚙️", title: lang === "en" ? "Configurable" : "Yapılandırılabilir", desc: lang === "en" ? "Set fragment counts, conversion thresholds, and reward commands freely" : "Parçacık sayılarını, dönüşüm eşiklerini ve ödül komutlarını serbestçe ayarlayın" },
     ],
-    tech: [],
+    tech: ["Java","ExcellentCrates","Spigot API","YAML"],
     stats: [
       { label: lang === "en" ? "Integration" : "Entegrasyon", value: "ExcellentCrates" },
       { label: lang === "en" ? "Type" : "Tür", value: "Premium" },

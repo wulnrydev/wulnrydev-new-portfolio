@@ -2,6 +2,7 @@
   position: relative;
   padding: 3.5rem 2.5rem 8rem;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .inner {
@@ -83,6 +84,7 @@
   align-items: stretch;
 }
 
+/* ── Glass 3D embossed card ─────────────────────────────── */
 /* Card Wrapper for Gradient Border */
 .cardWrapper {
   position: relative;

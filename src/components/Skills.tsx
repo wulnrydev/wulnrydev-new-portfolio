@@ -115,7 +115,6 @@ export default function Skills() {
 
   return (
     <section id="skills" className={styles.section}>
-
       {/* Divider line */}
       <Reveal width="100%">
         <div className={styles.dividerRow}>

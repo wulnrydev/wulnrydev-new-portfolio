@@ -5,7 +5,7 @@
 }
 
 :root {
-  --font-inter: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-fallback: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --black: #000000;
   --surface-1: #0a0a0a;
   --surface-2: #111111;
@@ -25,7 +25,7 @@ html {
 body {
   background: var(--black);
   color: var(--text-primary);
-  font-family: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-inter, "Inter"), var(--font-fallback);
   overflow-x: hidden;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
@@ -41,6 +41,34 @@ section {
 a { text-decoration: none; color: inherit; }
 img { display: block; }
 button { cursor: pointer; border: none; background: none; font: inherit; }
+
+/* Visible keyboard focus for every interactive element. */
+:focus-visible {
+  outline: 2px solid rgba(168, 85, 247, 0.75);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Keyboard users get a jump link; pointer users never see it. */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 11000;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  background: #fff;
+  color: #000;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline-offset: 2px;
+}
 
 ::selection {
   background: rgba(168, 85, 247, 0.4);
