@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "wulnrydev — Minecraft Developer & Full-Stack Developer";
+export const alt = "wulnrydev — Full-Stack Developer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -47,18 +47,18 @@ export default function OpengraphImage() {
             wulnrydev
           </div>
           <div style={{ fontSize: "34px", color: "rgba(255,255,255,0.6)", lineHeight: 1.35 }}>
-            Minecraft Developer &amp; Full-Stack Developer
+            Full-Stack Developer
           </div>
         </div>
 
         <div style={{ display: "flex", gap: "12px", fontSize: "22px", color: "rgba(255,255,255,0.4)" }}>
-          <div>Server setups</div>
+          <div>Web apps</div>
           <div>·</div>
-          <div>Plugins</div>
+          <div>APIs</div>
           <div>·</div>
           <div>Discord bots</div>
           <div>·</div>
-          <div>Web interfaces</div>
+          <div>Interfaces</div>
         </div>
       </div>
     ),

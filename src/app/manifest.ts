@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "wulnrydev — Minecraft & Full-Stack Developer",
+    name: "wulnrydev — Full-Stack Developer",
     short_name: "wulnrydev",
     description:
-      "Minecraft developer and full-stack web developer building custom server setups, plugins, Discord bots and modern web interfaces.",
+      "Full-stack developer building modern web applications, scalable backends, Discord bots and polished interfaces.",
     start_url: "/",
     display: "standalone",
     background_color: "#0d0d0d",

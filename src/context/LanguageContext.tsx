@@ -23,7 +23,7 @@ export const translations = {
     hero: {
       badge: "Online & available",
       greeting: "Hello, I'm",
-      typewriter: "I design & develop modern interfaces, advanced applications, Minecraft solutions and Discord bots,",
+      typewriter: "I design & develop modern web interfaces, scalable applications, APIs and Discord bots,",
       getInTouch: "Get in touch",
       viewGithub: "View GitHub",
       yearsExp: "Years Experience",
@@ -166,7 +166,7 @@ export const translations = {
     hero: {
       badge: "Çevrimiçi & müsait",
       greeting: "Merhaba, ben",
-      typewriter: "Modern arayüzler, gelişmiş uygulamalar, Minecraft çözümleri ve Discord botları tasarlıyor & geliştiriyorum,",
+      typewriter: "Modern web arayüzleri, ölçeklenebilir uygulamalar, API'ler ve Discord botları tasarlıyor & geliştiriyorum,",
       getInTouch: "İletişime Geç",
       viewGithub: "GitHub'ı Görüntüle",
       yearsExp: "Yıl Deneyim",
